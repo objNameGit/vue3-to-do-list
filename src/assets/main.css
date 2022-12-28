@@ -1,4 +1,5 @@
 @import './base.css';
+@import './vars.css';
 
 #app {
   max-width: 1280px;
@@ -28,8 +29,8 @@ a,
   }
 
   #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
+    /* display: grid; */
+    /* grid-template-columns: 1fr 2fr; */
+    /* padding: 0 2rem; */
   }
 }

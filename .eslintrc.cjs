@@ -26,12 +26,4 @@ module.exports = {
             ],
         },
     ],
-    // settings: {
-    //     'import/resolver': {
-    //         typescript: {},
-    //     },
-    // },
-    // rules: {
-    //     indent: ['error', 4, { SwitchCase: 1 }],
-    // },
 };

@@ -1,55 +1,91 @@
 <template>
     <div class="item-list-container">
-        <div class="item-list">
+
+        <div 
+            class="item-list-action"
+            v-if="isRoot
+        ">
+            <button 
+                class="custom-button"
+                @click="whenCreateItem"
+            >
+                Создать задачу
+            </button>
+            <button 
+                :disabled="!havingSelectedItem"
+                class="custom-button"
+                @click="onDeleteClick"
+            >
+                Удалить выбранное
+            </button>
+        </div>
+        <div 
+            class="item-list"
+            v-if="!!itemList?.length"
+        >
             <TheItem
                 v-for="(item, i) in itemList"
                 :key="`item-${i}`"
                 :item="item"
+                :childListDict="childListDict"
+                :selectedItemDict="selectedItemDict"
+                :whenEditItem="whenEditItem"
+                :whenChangeItemStatus="whenChangeItemStatus"
+                :whenDeleteItemList="whenDeleteItemList"
+                :toggleSelectedItem="toggleSelectedItem"
             />
         </div>
+        <div v-else>
+            List is empty
+        </div>
     </div>
+
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+import { ref, computed } from 'vue';
 import TheItem from '@/components/TheItem.vue';
 
-export default {
-    name: 'item-list',
-    components: { TheItem },
-    props: { 
-        itemList: {
-            type: Array,
-            default: () => [],
-            required: true,
-        },
-        childListDict: {
-            type: Object,
-            default: () => {},
-            required: true,
-        },
-    },
+import type { ItemList, SubItemDict, SelectedItemDict } from '~/types/Item';
+
+export interface TheItemProps {
+    isRoot: boolean;
+    itemList: ItemList;
+    childListDict: SubItemDict;
+    selectedItemDict: SelectedItemDict;
+    whenEditItem: (item: Item) => void;
+    whenCreateItem: (item: Item) => void;
+    whenChangeItemStatus: (params?: any) => void;
+    whenDeleteItemList: (params?: any) => void;
+    toggleSelectedItem: (params?: any) => void;
+}
+
+const props = defineProps<TheItemProps>();
+
+const havingSelectedItem = computed(() => Object.keys(props.selectedItemDict).length > 0);
+
+function createTask() {}
+
+function onDeleteClick() {
+    const keyList = Object.keys(props.selectedItemDict);
+    const params = []
+
+    keyList.forEach((key) => params.push(props.selectedItemDict[key]))
+
+    props.whenDeleteItemList(params) 
 }
 </script>
 
 <style lang="css" scoped>
+.item-list-action {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+}
+
 .item {
     margin-top: 2rem;
     display: flex;
-}
-
-.details {
-    flex: 1;
-    margin-left: 1rem;
-}
-
-i {
-    display: flex;
-    place-items: center;
-    place-content: center;
-    width: 32px;
-    height: 32px;
-
-    color: var(--color-text);
 }
 
 h3 {
@@ -59,47 +95,17 @@ h3 {
     color: var(--color-heading);
 }
 
-@media (min-width: 1024px) {
-    .item {
-        margin-top: 0;
-        padding: 0.4rem 0 1rem calc(var(--section-gap) / 2);
-    }
+button.custom-button {
+    padding: 0px;
+    background: none;
+    border: none;
 
-    i {
-        top: calc(50% - 25px);
-        left: -26px;
-        position: absolute;
-        border: 1px solid var(--color-border);
-        background: var(--color-background);
-        border-radius: 8px;
-        width: 50px;
-        height: 50px;
-    }
+    cursor: pointer;
+    color: rgb(34, 104, 255);
+}
 
-    .item:before {
-        content: ' ';
-        border-left: 1px solid var(--color-border);
-        position: absolute;
-        left: 0;
-        bottom: calc(50% + 25px);
-        height: calc(50% - 25px);
-    }
-
-    .item:after {
-        content: ' ';
-        border-left: 1px solid var(--color-border);
-        position: absolute;
-        left: 0;
-        top: calc(50% + 25px);
-        height: calc(50% - 25px);
-    }
-
-    .item:first-of-type:before {
-        display: none;
-    }
-
-    .item:last-of-type:after {
-        display: none;
-    }
+button.custom-button[disabled] {
+    color:rgb(176, 176, 176);
+    cursor: not-allowed;
 }
 </style>
