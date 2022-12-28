@@ -2,6 +2,7 @@
   "name": "to-do-list",
   "version": "0.0.0",
   "private": true,
+  "homepage": "https://objnamegit.github.io/vue3-to-do-list/",
   "scripts": {
     "dev": "vite",
     "build": "run-p type-check build-only",

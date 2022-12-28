@@ -6,8 +6,6 @@ import vueJsx from '@vitejs/plugin-vue-jsx';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-    // @ts-ignore
-    publicPath: process.env.NODE_ENV === "production" ? '/vue3-to-do-list/' : '',
     plugins: [vue(), vueJsx()],
     resolve: {
         alias: {
@@ -15,5 +13,5 @@ export default defineConfig({
             '~': fileURLToPath(new URL('./', import.meta.url)),
         },
     },
-    base: './',
+    base: '/vue3-to-do-list/',
 });
