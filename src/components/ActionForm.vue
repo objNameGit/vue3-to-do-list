@@ -2,27 +2,27 @@
     <div class="action-form-wrapper">
         <TheModal
             :title="modalStore.modal.title"
+            :isAcceptButtonDisabled="tempItem?.title === ''"
             :whenAcceptClick="() => modalStore.modal.onAcceptClick(tempItem)"
             :whenCancelClick="modalStore.modal.onCancelClick"
-            :isAcceptButtonDisabled="tempItem.title===''"
         >
             <template #modal-body>
                 <div class="form-field">
                     <label for="title">Введите название</label>
                     <input
+                        v-model="tempItem.title"
                         id="title"
                         name="title"
                         placeholder=""
                         required="true"
-                        v-model="tempItem.title"
-                    >
+                    />
                 </div>
 
                 <div class="form-field">
                     <label for="parent-name">Выберите родительскую задачу</label>
-                    <select 
+                    <select
                         v-model="tempItem.parentId"
-                        id="parent-name" 
+                        id="parent-name"
                         name="parent-name"
                     >
                         <option :value="0">Не выбрано</option>
@@ -32,7 +32,8 @@
                             :key="`select-item-${item.id}`"
                             :id="item.id"
                         >
-                            {{ item.title }}</option>
+                            {{ item.title }}
+                        </option>
                     </select>
                 </div>
 
@@ -46,39 +47,33 @@
                     />
                 </div>
             </template>
-
         </TheModal>
     </div>
-
-   
 </template>
 
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useTaskStore } from '~/src/stores/itemStore';
 import { useModalStore } from '~/src/stores/modal';
 
-import type { Item, ItemList, SubItemDict } from '~/types/Item';
-import { defaultItem } from '~/types/Item';
+import { defaultItem, type Item } from '~/types/Item';
 
 import TheModal from '@/components/TheModal.vue';
 
 export interface ActionFormProps {
-    title?: string,
-    message?: string,
-    whenAcceptClick: (params?: any) => {},
-    whenCancelClick: (params?: any) => {},
+    title?: string;
+    message?: string;
+    whenAcceptClick?: (params?: any) => void;
+    whenCancelClick?: (params?: any) => void;
 }
 
-const itemStore = new useTaskStore();
-const modalStore = new useModalStore();
+const itemStore = useTaskStore();
+const modalStore = useModalStore();
 
-const tempItem: Item = ref({ ...modalStore.modal.params.actionItem });
+const tempItem = ref({ ...defaultItem });
 
-const selectFilteredList = computed(() => {
-    return itemStore.itemList.filter(({ id }) => id !== modalStore.modal.params.actionItem.id)
-})
-
+onMounted(() => { tempItem.value = modalStore.modal.params.actionItem });
+// defineProps<ActionFormProps>();
 </script>
 
 <style lang="css" scoped>

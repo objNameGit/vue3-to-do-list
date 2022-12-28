@@ -12,12 +12,19 @@
 
             <div class="action-wrapper">
                 <slot name="action-wrapper">
-                    <button 
+                    <button
                         class="accept-button action-button"
                         :disabled="isAcceptButtonDisabled"
                         @click.prevent="whenAcceptClick"
-                    >Ок</button>
-                    <button class="cancel-button action-button" @click.prevent="whenCancelClick">Отмена</button>
+                    >
+                        Ок
+                    </button>
+                    <button
+                        class="cancel-button action-button"
+                        @click.prevent="whenCancelClick"
+                    >
+                        Отмена
+                    </button>
                 </slot>
             </div>
         </form>
@@ -25,20 +32,20 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref } from 'vue';
+import { onMounted, onUnmounted } from 'vue';
 
 export interface TheModal {
-    title?: string,
-    message?: string,
-    isAcceptButtonDisabled?: boolean
-    whenAcceptClick: () => {}
-    whenCancelClick: () => {}
+    title?: string;
+    message?: string;
+    isAcceptButtonDisabled?: boolean;
+    whenAcceptClick: () => void;
+    whenCancelClick: () => void;
 }
 
-onMounted(() => document.body.style.overflow = 'hidden')
-onUnmounted(() => document.body.style.overflow = '')
+defineProps<TheModal>();
 
-const props = defineProps<TheModal>();
+onMounted(() => (document.body.style.overflow = 'hidden'));
+onUnmounted(() => (document.body.style.overflow = ''));
 </script>
 
 <style lang="css" scoped>
@@ -61,7 +68,7 @@ const props = defineProps<TheModal>();
 form {
     margin: auto;
     max-width: 500px;
-    min-width: 345px;
+    min-width: 390px;
     max-height: 500px;
     border-radius: 8px;
     background-color: white;
@@ -83,7 +90,6 @@ form {
     margin-bottom: var(--modal-horizontal-margin);
     margin-left: var(--modal-horizontal-margin);
 }
-
 
 .action-wrapper {
     display: flex;
@@ -129,7 +135,6 @@ form {
 .cancel-button {
     background-color: white;
     border: 1px solid #c7c7c7;
-    cursor: poinnter
-
+    cursor: poinnter;
 }
 </style>

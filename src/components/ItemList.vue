@@ -1,17 +1,13 @@
 <template>
     <div class="item-list-container">
-
-        <div 
-            class="item-list-action"
-            v-if="isRoot
-        ">
-            <button 
-                class="custom-button"
-                @click="whenCreateItem"
+        <div class="item-list-action" v-if="isRoot">
+            <button
+                class="custom-button" 
+                @click="whenCreateItemClick"
             >
                 Создать задачу
             </button>
-            <button 
+            <button
                 :disabled="!havingSelectedItem"
                 class="custom-button"
                 @click="onDeleteClick"
@@ -19,64 +15,68 @@
                 Удалить выбранное
             </button>
         </div>
-        <div 
-            class="item-list"
-            v-if="!!itemList?.length"
-        >
+        <div class="item-list" v-if="!!itemList?.length">
             <TheItem
                 v-for="(item, i) in itemList"
                 :key="`item-${i}`"
                 :item="item"
                 :childListDict="childListDict"
                 :selectedItemDict="selectedItemDict"
-                :whenEditItem="whenEditItem"
                 :whenChangeItemStatus="whenChangeItemStatus"
-                :whenDeleteItemList="whenDeleteItemList"
+                :whenEditItemClick="whenEditItemClick"
+                :whenCreateItemClick="whenCreateItemClick"
+                :whenDeleteItemListClick="whenDeleteItemListClick"
                 :toggleSelectedItem="toggleSelectedItem"
             />
         </div>
-        <div v-else>
-            List is empty
-        </div>
+        <div class="empty-list" v-else>List is empty</div>
     </div>
-
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import TheItem from '@/components/TheItem.vue';
 
-import type { ItemList, SubItemDict, SelectedItemDict } from '~/types/Item';
+import type { ItemList, ItemStatus, Item, SubItemDict, SelectedItemDict } from '~/types/Item';
 
 export interface TheItemProps {
-    isRoot: boolean;
+    isRoot?: boolean;
     itemList: ItemList;
     childListDict: SubItemDict;
     selectedItemDict: SelectedItemDict;
-    whenEditItem: (item: Item) => void;
-    whenCreateItem: (item: Item) => void;
-    whenChangeItemStatus: (params?: any) => void;
-    whenDeleteItemList: (params?: any) => void;
-    toggleSelectedItem: (params?: any) => void;
+    whenCreateItemClick: () => void;
+    whenEditItemClick: (item: Item) => void;
+    whenChangeItemStatus: (newStatus: ItemStatus, id: number, parentId?: number) => void;
+    whenDeleteItemListClick: (params?: any) => void;
+    toggleSelectedItem: (value: boolean, item: Item) => void;
 }
 
 const props = defineProps<TheItemProps>();
 
 const havingSelectedItem = computed(() => Object.keys(props.selectedItemDict).length > 0);
 
-function createTask() {}
-
 function onDeleteClick() {
     const keyList = Object.keys(props.selectedItemDict);
-    const params = []
+    const params = [] as ItemList;
 
-    keyList.forEach((key) => params.push(props.selectedItemDict[key]))
+    keyList.forEach((key: string) => params.push(props.selectedItemDict[Number(key)]));
 
-    props.whenDeleteItemList(params) 
+    props.whenDeleteItemListClick(params);
 }
 </script>
 
 <style lang="css" scoped>
+.empty-list {
+    margin-top: 20px;
+    min-height: 98px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #e2e2e2;
+    border-radius: 6px;
+    font-weight: 200;
+}
+
 .item-list-action {
     display: flex;
     justify-content: space-between;
@@ -105,7 +105,7 @@ button.custom-button {
 }
 
 button.custom-button[disabled] {
-    color:rgb(176, 176, 176);
+    color: rgb(176, 176, 176);
     cursor: not-allowed;
 }
 </style>

@@ -1,10 +1,5 @@
 <template>
-    <div 
-        :id="item.id"
-        draggable="true"
-        class="item" 
-        @click="isOpen = !isOpen"
-    >
+    <div :id="`${item.id}`" draggable="true" class="item" @click="isOpen = !isOpen">
         <div class="input-wrapper">
             <input
                 class="item-checkbox"
@@ -24,52 +19,51 @@
             </div>
         </div>
         <div class="action-block">
-                <!-- TODO: make button component -->
-                <button class="custom-button">
-                    <img
-                        :src="`src/assets/icon/edit.png`"
-                        class="edit-icon action-icon"
-                        alt="edit icon"
-                        @click.stop="whenEditItem(item)"
-                    />
-                </button>
-                <button class="custom-button">
-                    <img
-                        :src="`src/assets/icon/delete.png`"
-                        class="delete-icon action-icon"
-                        alt="delete icon"
-                        @click.stop="whenDeleteItemList([item])"
-                    />
-                </button>
-                <button class="custom-button">
-                    <img
-                        :src="`${getStatusIcon}`"
-                        class="img-status action-icon"
-                        alt="Status icon"
-                        @click.stop="changeStatus()"
-                    />
-                </button>
+            <!-- TODO: make button component -->
+            <button class="custom-button">
+                <img
+                    :src="`src/assets/icon/edit.png`"
+                    class="edit-icon action-icon"
+                    alt="edit icon"
+                    @click.stop="whenEditItemClick(item)"
+                />
+            </button>
+            <button class="custom-button">
+                <img
+                    :src="`src/assets/icon/delete.png`"
+                    class="delete-icon action-icon"
+                    alt="delete icon"
+                    @click.stop="whenDeleteItemListClick([item])"
+                />
+            </button>
+            <button class="custom-button">
+                <img
+                    :src="`${getStatusIcon}`"
+                    class="img-status action-icon"
+                    alt="Status icon"
+                    @click.stop="changeStatus()"
+                />
+            </button>
         </div>
+        <div class="counter">{{ childCount }}</div>
     </div>
-        <div 
-            v-if="isOpen && isParent"
-            class="child-list"
-        >
-            <ItemList
-                :itemList="childListDict[item.id]"
-                :childListDict="[]"
-                :selectedItemDict="selectedItemDict"
-                :whenEditItem="whenEditItem"
-                :whenChangeItemStatus="whenChangeItemStatus"
-                :whenDeleteItemList="whenDeleteItemList"
-                :toggleSelectedItem="toggleSelectedItem"
-            />
-        </div>
+    <div v-if="isOpen && isParent" class="child-list">
+        <ItemList
+            :itemList="childListDict[item.id]"
+            :childListDict="[]"
+            :selectedItemDict="selectedItemDict"
+            :whenEditItemClick="whenEditItemClick"
+            :whenCreateItemClick="whenCreateItemClick"
+            :whenChangeItemStatus="whenChangeItemStatus"
+            :whenDeleteItemListClick="whenDeleteItemListClick"
+            :toggleSelectedItem="toggleSelectedItem"
+        />
+    </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import ItemList from "@/components/ItemList.vue";
+import ItemList from '@/components/ItemList.vue';
 
 import type { Item, SubItemDict, SelectedItemDict } from '~/types/Item';
 
@@ -79,57 +73,58 @@ export interface TheItemProps {
     item: Item;
     childListDict: SubItemDict;
     selectedItemDict: SelectedItemDict;
-    whenEditItem: (params?: any) => void;
-    whenChangeItemStatus: (params?: any) => void;
-    whenDeleteItemList: (params?: any) => void;
-    toggleSelectedItem: (params?: any) => void;
+    whenEditItemClick: (item: Item) => void;
+    whenCreateItemClick: () => void;
+    whenChangeItemStatus: (...params: any) => void;
+    whenDeleteItemListClick: (...params: any) => void;
+    toggleSelectedItem: (...params: any) => void;
 }
 
-const props = defineProps<TheItemProps>()
+const props = defineProps<TheItemProps>();
 const isOpen = ref(false);
 
 const getStatusIcon = computed<string>((): string => {
-    let result = ''
+    let result = '';
 
     switch (props.item.status) {
         case ItemStatus.Complited:
-            result = '/src/assets/icon/done-status.png'
+            result = '/src/assets/icon/done-status.png';
             break;
 
         case ItemStatus.Active:
-            result = '/src/assets/icon/wait-status.png'
+            result = '/src/assets/icon/wait-status.png';
             break;
 
         default:
-            result = ''
+            result = '';
             break;
     }
 
-    return result; 
+    return result;
 });
 
 const isSelectedItem = computed<boolean>((): boolean => {
-    return props.selectedItemDict[props.item.id] || false; 
+    return !!props.selectedItemDict[props.item.id] || false;
+});
+const childCount = computed<boolean>((): boolean => {
+    return props.childListDict[props.item.id]?.length ?? 0;
 });
 
 const isParent = computed<boolean>((par): boolean => {
-    return props.item.parentId === 0
+    return props.item.parentId === 0;
 });
 
 function changeStatus() {
-    const newStatus = props.item.status === ItemStatus.Complited
-        ? ItemStatus.Active
-        : ItemStatus.Complited;
+    const newStatus = props.item.status === ItemStatus.Complited ? ItemStatus.Active : ItemStatus.Complited;
 
-    props.whenChangeItemStatus(newStatus, props.item.id, props.item.parentId)
+    props.whenChangeItemStatus(newStatus, props.item.id, props.item.parentId);
 }
 
 function onToggle(event) {
     const value = event.target.checked;
 
-    props.toggleSelectedItem(value, props.item)
+    props.toggleSelectedItem(value, props.item);
 }
-
 </script>
 
 <style lang="postcss" scoped>
@@ -143,6 +138,7 @@ function onToggle(event) {
     grid-template-columns: auto 1fr auto;
     column-gap: 8px;
     align-items: center;
+    position: relative;
 
     min-height: 46px;
     border: 1px solid var(--vt-c-divider-light-2);
@@ -155,12 +151,12 @@ function onToggle(event) {
     margin: auto 0;
     margin: auto calc(var(--horizotal-padding-item) / 2) auto var(--horizotal-padding-item);
 }
- 
+
 .item-checkbox {
     height: 16px;
     width: 16px;
-    outline-color: var(--vt-c-divider-light-2)!important;
-    border-color: var(--vt-c-divider-light-2)!important;
+    outline-color: var(--vt-c-divider-light-2) !important;
+    border-color: var(--vt-c-divider-light-2) !important;
 }
 
 .item-content {
@@ -224,6 +220,27 @@ h3 {
     color: var(--color-heading);
 }
 
+.counter {
+    position: absolute;
+    top: -1px;
+    right: -1px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 11px;
+
+    width: 17px;
+    height: 17px;
+    border-radius: 50%;
+    background-color: #c2f2f7;
+    color: #686868;
+}
+
+
+.rotate-90 {
+    transform: rotate(90deg);
+}
+
 @media (min-width: 1024px) {
     .item:before {
         content: ' ';
@@ -250,9 +267,5 @@ h3 {
     .item:last-of-type:after {
         display: none;
     }
-}
-
-.rotate-90 {
-    transform: rotate(90deg);
 }
 </style>

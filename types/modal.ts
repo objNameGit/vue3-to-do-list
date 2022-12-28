@@ -1,4 +1,4 @@
-import { defaultItem, type Item } from "~/types/Item";
+import { defaultItem, type Item } from '~/types/Item';
 
 export enum ModalAction {
     Create = 'create',
@@ -8,7 +8,7 @@ export enum ModalAction {
 }
 
 export interface ModalActionParams {
-    actionItem: Item
+    actionItem: Item;
 }
 
 export interface ModalState {
@@ -16,7 +16,7 @@ export interface ModalState {
     isVisible: boolean;
     title: string;
     message: string;
-    params: ModalActionParams
+    params: ModalActionParams;
     onAcceptClick: (params?: any) => void;
     onCancelClick: (params?: any) => void;
 }
@@ -26,7 +26,7 @@ export const titleActionDict: Record<ModalAction, string> = {
     [ModalAction.Edit]: 'Редактирование задачи',
     [ModalAction.Delete]: 'Удаление',
     [ModalAction.Default]: '',
-}
+};
 
 export const defaultModalState: ModalState = {
     action: ModalAction.Default,
@@ -34,8 +34,8 @@ export const defaultModalState: ModalState = {
     message: '',
     isVisible: false,
     params: {
-        actionItem: {...defaultItem}
+        actionItem: { ...defaultItem },
     },
-    onAcceptClick: (params?: any) => {},
-    onCancelClick: (params?: any) => {},
+    onAcceptClick: (...params: any) => {},
+    onCancelClick: (params: any) => {},
 };

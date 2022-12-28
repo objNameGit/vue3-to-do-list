@@ -12,18 +12,49 @@ module.exports = {
     parserOptions: {
         ecmaVersion: 'latest',
     },
-    rules: [
-        {
-            'vue/max-attributes-per-line': [
-                'error',
-                {
-                    singleline: 1,
-                    multiline: {
-                        max: 1,
-                        allowFirstLine: false,
-                    },
-                },
-            ],
-        },
-    ],
+    // rules: {
+    //     semi: 'off',
+    //     'space-before-function-paren': 'off',
+    //     'vue/max-attributes-per-line': [2, {
+    //         'singleline': 20,
+    //         'multiline': {
+    //            'max': 1,
+    //            'allowFirstLine': false
+    //          }
+    //     }]
+    // },
+    rules: {
+        'vue/html-indent': ['error', 4],
+        'vue/max-len': [
+            'warn',
+            {
+                code: 120,
+                template: 120,
+                tabWidth: 4,
+                comments: 120,
+                ignorePattern: '',
+                ignoreComments: false,
+                ignoreTrailingComments: false,
+                ignoreUrls: false,
+                ignoreStrings: false,
+                ignoreTemplateLiterals: false,
+                ignoreRegExpLiterals: false,
+                ignoreHTMLAttributeValues: false,
+                ignoreHTMLTextContents: false,
+            },
+        ],
+        'no-underscore-dangle': [
+            'error',
+            {
+                allowAfterThis: true,
+            },
+        ],
+        'vue/html-closing-bracket-newline': [
+            'error',
+            {
+                singleline: 'never',
+                multiline: 'always',
+            },
+        ],
+    }
 };
