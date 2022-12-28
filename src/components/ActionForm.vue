@@ -30,7 +30,7 @@
                             v-for="item in itemStore.itemList"
                             :value="item.id"
                             :key="`select-item-${item.id}`"
-                            :id="item.id"
+                            :id="`${item.id}`"
                         >
                             {{ item.title }}
                         </option>

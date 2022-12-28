@@ -8,8 +8,6 @@ import { getRandomInt } from '~/utils/math';
 import { StoreKey } from '~/types/StoreKey';
 
 export const useTaskStore = defineStore('taskStore', () => {
-    // const itemList = ref<ItemList>(stubTaskList);
-    // const childListDict = ref<SubItemDict>(stubSubTaskDict);
     const itemList = ref<ItemList>([]);
     const childListDict = ref<SubItemDict>({});
     const selectedItemDict = ref<SelectedItemDict>({});
@@ -216,8 +214,6 @@ export const useTaskStore = defineStore('taskStore', () => {
             const savedChildDictStr = window.localStorage.getItem(StoreKey.ChildList);
             let savedItemList = [];
             let savedChildDict = {};
-
-            const childListDict = ref<SubItemDict>(stubSubTaskDict);
 
             if (savedItemListStr === null || savedChildDictStr === null) {
                 itemList.value = [...stubTaskList];

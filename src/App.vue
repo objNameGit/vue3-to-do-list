@@ -26,7 +26,6 @@
 
         <ActionForm
             v-if="modalStore.modal.isVisible && (modalStore.modal.action === ModalAction.Edit || modalStore.modal.action === ModalAction.Create)"
-            :title="modalStore.modal.title"
         />
     </main>
 </template>
@@ -44,14 +43,18 @@ import { ModalAction } from '~/types/modal';
 const itemStore = useTaskStore();
 const modalStore = useModalStore();
 
+function saveStateWrapper() {
+    itemStore.saveState(itemStore.itemList, itemStore.childListDict)
+}
+
 onMounted(() => {
     itemStore.loadState();
 
-    window.addEventListener('beforeunload', () => itemStore.saveState(itemStore.itemList, itemStore.childListDict));
+    window.addEventListener('beforeunload', saveStateWrapper);
 });
 
 onBeforeUnmount(() => {
-    window.removeEventListener('beforeunload', itemStore.saveState);
+    window.removeEventListener('beforeunload', saveStateWrapper);
 });
 </script>
 

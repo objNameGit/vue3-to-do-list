@@ -106,7 +106,7 @@ const getStatusIcon = computed<string>((): string => {
 const isSelectedItem = computed<boolean>((): boolean => {
     return !!props.selectedItemDict[props.item.id] || false;
 });
-const childCount = computed<boolean>((): boolean => {
+const childCount = computed<number>((): number => {
     return props.childListDict[props.item.id]?.length ?? 0;
 });
 
