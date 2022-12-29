@@ -30,7 +30,7 @@
             </button>
             <button class="custom-button">
                 <img
-                    :src="`src/assets/icon/delete.png`"
+                    :src="`./src/assets/icon/delete.png`"
                     class="delete-icon action-icon"
                     alt="delete icon"
                     @click.stop="whenDeleteItemListClick([item])"
