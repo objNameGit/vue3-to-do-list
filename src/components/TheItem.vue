@@ -22,7 +22,7 @@
             <!-- TODO: make button component -->
             <button class="custom-button">
                 <img
-                    :src="`src/assets/icon/edit.png`"
+                    :src="editImg"
                     class="edit-icon action-icon"
                     alt="edit icon"
                     @click.stop="whenEditItemClick(item)"
@@ -30,7 +30,7 @@
             </button>
             <button class="custom-button">
                 <img
-                    :src="`./src/assets/icon/delete.png`"
+                    :src="deleteImg"
                     class="delete-icon action-icon"
                     alt="delete icon"
                     @click.stop="whenDeleteItemListClick([item])"
@@ -66,8 +66,12 @@ import { ref, computed } from 'vue';
 import ItemList from '@/components/ItemList.vue';
 
 import type { Item, SubItemDict, SelectedItemDict } from '~/types/Item';
-
 import { ItemStatus } from '~/types/Item';
+
+import deleteImg from '@/assets/icon/delete.png';
+import editImg from '@/assets/icon/edit.png';
+import doneStatusImg from '@/assets/icon/done-status.png';
+import waitStatusImg from '@/assets/icon/wait-status.png';
 
 export interface TheItemProps {
     item: Item;
@@ -88,11 +92,11 @@ const getStatusIcon = computed<string>((): string => {
 
     switch (props.item.status) {
         case ItemStatus.Complited:
-            result = '/src/assets/icon/done-status.png';
+            result = doneStatusImg;
             break;
 
         case ItemStatus.Active:
-            result = '/src/assets/icon/wait-status.png';
+            result = waitStatusImg;
             break;
 
         default:
