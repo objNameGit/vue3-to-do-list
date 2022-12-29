@@ -13,5 +13,8 @@ export default defineConfig({
             '~': fileURLToPath(new URL('./', import.meta.url)),
         },
     },
-    base: '/vue3-to-do-list/',
+    base: './',
+    build: {
+        outDir: 'dist',
+    },
 });
