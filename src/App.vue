@@ -17,23 +17,21 @@
         />
 
         <TheModal
-            v-if="modalStore.modal.isVisible && modalStore.modal.action === ModalAction.Delete"
+            v-if="isModalVisible"
             :title="modalStore.modal.title"
             :message="modalStore.modal.message"
             :whenAcceptClick="modalStore.modal.onAcceptClick"
             :whenCancelClick="modalStore.modal.onCancelClick"
         />
 
-        <ActionForm
-            v-if="modalStore.modal.isVisible && (modalStore.modal.action === ModalAction.Edit || modalStore.modal.action === ModalAction.Create)"
-        />
+        <ActionForm v-if="isActionFormVisible" />
     </main>
 </template>
 
 <script setup lang="ts">
 import ItemList from '@/components/ItemList.vue';
 import TheModal from '@/components/TheModal.vue';
-import { onMounted, onBeforeUnmount } from 'vue';
+import { onMounted, onBeforeUnmount, computed } from 'vue';
 import ActionForm from '~/src/components/ActionForm.vue';
 
 import { useTaskStore } from '~/src/stores/itemStore';
@@ -43,8 +41,19 @@ import { ModalAction } from '~/types/modal';
 const itemStore = useTaskStore();
 const modalStore = useModalStore();
 
+const isActionFormVisible = computed(
+    () =>
+        modalStore.modal.isVisible &&
+        (modalStore.modal.action === ModalAction.Edit ||
+            modalStore.modal.action === ModalAction.Create)
+);
+
+const isModalVisible =
+    modalStore.modal.isVisible &&
+    modalStore.modal.action === ModalAction.Delete;
+
 function saveStateWrapper() {
-    itemStore.saveState(itemStore.itemList, itemStore.childListDict)
+    itemStore.saveState(itemStore.itemList, itemStore.childListDict);
 }
 
 onMounted(() => {

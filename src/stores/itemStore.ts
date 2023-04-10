@@ -1,8 +1,15 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
 
-import { ItemStatus, type ItemList, type SelectedItemDict, type Item, type SubItemDict } from '~/types/Item';
-import { stubSubTaskDict, stubTaskList } from '~/types/Item';
+import {
+    type Item,
+    type ItemList,
+    ItemStatus,
+    type SelectedItemDict,
+    stubSubTaskDict,
+    stubTaskList,
+    type SubItemDict,
+} from '~/types/Item';
 
 import { getRandomInt } from '~/utils/math';
 import { StoreKey } from '~/types/StoreKey';
@@ -18,37 +25,47 @@ export const useTaskStore = defineStore('taskStore', () => {
 
     function findIndex(itemId: number, parentId = 0): number {
         const isParent = parentId === 0;
-        let foundindex = -1;
+        let foundIndex = -1;
 
         if (!isParent) {
             const childrenList = childListDict.value[parentId];
 
-            foundindex = childrenList.findIndex((children) => children.id === itemId);
+            foundIndex = childrenList.findIndex(
+                (children) => children.id === itemId
+            );
         } else {
-            foundindex = itemList.value.findIndex((children) => children.id === itemId);
+            foundIndex = itemList.value.findIndex(
+                (children) => children.id === itemId
+            );
         }
 
-        if (foundindex === -1) {
-            console.error(`Not found child with id = ${itemId} for parent with id = ${parentId}`);
+        if (foundIndex === -1) {
+            console.error(
+                `Not found child with id = ${itemId} for parent with id = ${parentId}`
+            );
         }
 
-        return foundindex;
+        return foundIndex;
     }
 
     function findItem(itemId: number, parentId = 0): Item | undefined {
         const isParent = parentId === 0;
-        let foundElem: Item | undefined = undefined;
+        let foundElem: Item | undefined;
 
         if (!isParent) {
             const childrenList = childListDict.value[parentId];
 
             foundElem = childrenList.find((children) => children.id === itemId);
         } else {
-            foundElem = itemList.value.find((children) => children.id === itemId);
+            foundElem = itemList.value.find(
+                (children) => children.id === itemId
+            );
         }
 
         if (foundElem === undefined) {
-            console.error(`Not found child with id = ${itemId} for parent with id = ${parentId}`);
+            console.error(
+                `Not found child with id = ${itemId} for parent with id = ${parentId}`
+            );
         }
 
         return foundElem;
@@ -65,20 +82,24 @@ export const useTaskStore = defineStore('taskStore', () => {
         foundItem.status = newStatus;
 
         if (isParent) {
-            childListDict.value[id].forEach((child) => (child.status = newStatus));
+            childListDict.value[id].forEach(
+                (child) => (child.status = newStatus)
+            );
 
             return;
         }
 
-        let isAllChildrenInStatus = false;
-
-        // Is chilren task with parent, check parent status
-        isAllChildrenInStatus = childListDict.value[parentId].every((children) => children.status === newStatus);
+        // Is children task with parent, check parent status
+        const isAllChildrenInStatus = childListDict.value[parentId].every(
+            (children) => children.status === newStatus
+        );
 
         // If all task in the same status
         const parent = findItem(parentId);
         const newParentStatus =
-            isAllChildrenInStatus && ItemStatus.Complited ? ItemStatus.Complited : ItemStatus.Active;
+            isAllChildrenInStatus && ItemStatus.Complete
+                ? ItemStatus.Complete
+                : ItemStatus.Active;
 
         if (parent) {
             parent.status = newParentStatus;
@@ -102,16 +123,23 @@ export const useTaskStore = defineStore('taskStore', () => {
             delete selectedItemDict.value[item.id];
 
             // Drop selected from parent, if parent checked
-            selectedItemDict.value[item.parentId] && delete selectedItemDict.value[item.parentId];
+            selectedItemDict.value[item.parentId] &&
+                delete selectedItemDict.value[item.parentId];
         } else {
             selectedItemDict.value[item.id] = item;
 
-            const childrenIdList = (childListDict.value[item.parentId] ?? []).map((el) => el.id);
-            const isAllChildrenSelected = childrenIdList.every((id) => !!selectedItemDict.value[id]);
+            const childrenIdList = (
+                childListDict.value[item.parentId] ?? []
+            ).map((el) => el.id);
+            const isAllChildrenSelected = childrenIdList.every(
+                (id) => !!selectedItemDict.value[id]
+            );
 
             const parent = findItem(item.parentId, 0);
 
-            isAllChildrenSelected && parent ? (selectedItemDict.value[item.parentId] = parent) : '';
+            isAllChildrenSelected && parent
+                ? (selectedItemDict.value[item.parentId] = parent)
+                : '';
         }
     }
 
@@ -120,7 +148,9 @@ export const useTaskStore = defineStore('taskStore', () => {
             const isParent = checkOnParent(deleteItem);
 
             if (!isParent) {
-                const newChildrenList = (childListDict.value[deleteItem.parentId] ?? []).filter((el) => el.id !== deleteItem.id);
+                const newChildrenList = (
+                    childListDict.value[deleteItem.parentId] ?? []
+                ).filter((el) => el.id !== deleteItem.id);
 
                 childListDict.value[deleteItem.parentId] = newChildrenList;
 
@@ -136,9 +166,9 @@ export const useTaskStore = defineStore('taskStore', () => {
                 delete childListDict[deleteItem.id];
             }
 
-            const newItemList = itemList.value.filter((el) => el.id !== deleteItem.id);
-
-            itemList.value = newItemList;
+            itemList.value = itemList.value.filter(
+                (el) => el.id !== deleteItem.id
+            );
 
             selectedItemDict.value = {};
         });
@@ -146,9 +176,8 @@ export const useTaskStore = defineStore('taskStore', () => {
 
     function createItem(newItem: Item) {
         const isParent = checkOnParent(newItem);
-        const id = getRandomInt(10000, 3000000);
 
-        newItem.id = id;
+        newItem.id = getRandomInt(10000, 3000000);
 
         if (isParent) {
             itemList.value.unshift(newItem);
@@ -170,19 +199,25 @@ export const useTaskStore = defineStore('taskStore', () => {
         if (currentItem.parentId !== editedItem.parentId) {
             if (currentIsParent) {
                 // Delete old item
-                const newItemList = itemList.value.filter(({ id }) => id !== currentItem.id);
-
-                itemList.value = newItemList;
+                itemList.value = itemList.value.filter(
+                    ({ id }) => id !== currentItem.id
+                );
             } else {
-                const newChildListDict = childListDict.value[currentItem.parentId].filter(({ id }) => id !== currentItem.id);
+                const newChildListDict = childListDict.value[
+                    currentItem.parentId
+                ].filter(({ id }) => id !== currentItem.id);
 
-                childListDict.value[currentItem.parentId] = [...newChildListDict];
+                childListDict.value[currentItem.parentId] = [
+                    ...newChildListDict,
+                ];
             }
 
             if (editedIsParent) {
                 itemList.value.unshift(editedItem);
             } else {
-                (childListDict.value[editedItem.parentId] ?? []).unshift(editedItem);
+                (childListDict.value[editedItem.parentId] ?? []).unshift(
+                    editedItem
+                );
             }
         } else {
             const foundIndex = findIndex(editedItem.id, editedItem.parentId);
@@ -199,8 +234,14 @@ export const useTaskStore = defineStore('taskStore', () => {
 
     function saveState(itemList, childListDict) {
         try {
-            window.localStorage.setItem(StoreKey.ItemList, JSON.stringify(itemList));
-            window.localStorage.setItem(StoreKey.ChildList, JSON.stringify(childListDict));
+            window.localStorage.setItem(
+                StoreKey.ItemList,
+                JSON.stringify(itemList)
+            );
+            window.localStorage.setItem(
+                StoreKey.ChildList,
+                JSON.stringify(childListDict)
+            );
 
             return true;
         } catch (error) {
@@ -210,8 +251,12 @@ export const useTaskStore = defineStore('taskStore', () => {
 
     function loadState() {
         try {
-            const savedItemListStr = window.localStorage.getItem(StoreKey.ItemList);
-            const savedChildDictStr = window.localStorage.getItem(StoreKey.ChildList);
+            const savedItemListStr = window.localStorage.getItem(
+                StoreKey.ItemList
+            );
+            const savedChildDictStr = window.localStorage.getItem(
+                StoreKey.ChildList
+            );
             let savedItemList = [];
             let savedChildDict = {};
 

@@ -16,11 +16,10 @@
   --vt-c-divider-dark-1: rgba(84, 84, 84, 0.65);
   --vt-c-divider-dark-2: rgba(84, 84, 84, 0.48);
   --vt-c-hover-light-1: var(--vt-c-light-blue);
-  --vt-c-hover-dark-1: rgba(29 29 29,1);
+  --vt-c-hover-dark-1: rgba(29, 29, 29,1);
   --vt-c-shadow-light-1: var(--vt-c-white-mute);;
   --vt-c-shadow-dark-1: #4a4a4a;
   --vt-c-background-dark-1: #1c1c1c;
-
 
   --vt-c-text-light-1: var(--vt-c-indigo);
   --vt-c-text-light-2: rgba(60, 60, 60, 0.66);
@@ -31,7 +30,6 @@
 /* semantic color variables for this project */
 :root {
   --color-background: var(--vt-c-white);
-  --color-background-soft: var(--vt-c-white-soft);
   --color-background-mute: var(--vt-c-white-mute);
   --color-background-blue: var(--vt-c-light-blue);
 
@@ -45,14 +43,21 @@
   --color-background-soft: var(--vt-c-white);
   --color-hover-background: var(--vt-c-hover-light-1);
 
-
   --section-gap: 160px;
+  --color-shadow: #606060;
+
+  --color-background-input: white;
+  --color-primary-modal-button: #0953ff;
+  --color-primary-modal-button-disabled: #dfdfdf;
+  --color-primary-modal-button-active: #1552e0;
+  --color-secondary-modal-button: white;
+  --color-secondary-modal-button-border: #c7c7c7;
+  --color-input-background: #c7c7c7;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --color-background: var(--vt-c-black);
-    --color-background-soft: var(--vt-c-black-soft);
     --color-background-mute: var(--vt-c-black-mute);
 
     --color-border: var(--vt-c-divider-dark-2);
@@ -65,8 +70,20 @@
     --color-background-soft: var(--vt-c-background-dark-1);
     --color-hover-soft: var(--vt-c-background-dark-1);
     --vt-c-hover-light: var(--vt-c-hover-dark-1);
-    --color-hover-background: rgba(29 29 29,1);
-  
+
+    --color-hover-background: rgba(29, 29, 29, 1);
+    --color-background-input: #a3a3a3;
+    --color-shadow: #1c1c1c;
+
+    --color-secondary-modal-button: #737373;
+    --color-secondary-modal-button-border: #787878;
+    --color-secondary-modal-button-hover: #595959;
+    --color-primary-modal-button-disabled: #313030;
+    --color-primary-modal-button-active: #4b4949;
+
+
+      --color-primary-modal-button: #173784;
+    --color-primary-modal-button-hover: #1c3673b3;
   }
 }
 

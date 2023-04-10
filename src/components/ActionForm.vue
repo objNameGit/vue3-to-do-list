@@ -14,12 +14,14 @@
                         id="title"
                         name="title"
                         placeholder=""
-                        required="true"
+                        required
                     />
                 </div>
 
                 <div class="form-field">
-                    <label for="parent-name">Выберите родительскую задачу</label>
+                    <label for="parent-name">
+                        Выберите родительскую задачу
+                    </label>
                     <select
                         v-model="tempItem.parentId"
                         id="parent-name"
@@ -52,27 +54,22 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useTaskStore } from '~/src/stores/itemStore';
 import { useModalStore } from '~/src/stores/modal';
 
-import { defaultItem, type Item } from '~/types/Item';
+import { defaultItem } from '~/types/Item';
 
 import TheModal from '@/components/TheModal.vue';
-
-export interface ActionFormProps {
-    title?: string;
-    message?: string;
-    whenAcceptClick?: (params?: any) => void;
-    whenCancelClick?: (params?: any) => void;
-}
 
 const itemStore = useTaskStore();
 const modalStore = useModalStore();
 
 const tempItem = ref({ ...defaultItem });
 
-onMounted(() => { tempItem.value = modalStore.modal.params.actionItem });
+onMounted(() => {
+    tempItem.value = modalStore.modal.params.actionItem;
+});
 // defineProps<ActionFormProps>();
 </script>
 
@@ -106,6 +103,7 @@ input,
 select,
 textarea {
     padding: 6px;
+    background-color: var(--color-background-input);
     border-radius: 6px;
     border: 1px solid var(--vt-c-divider-dark-2);
 }
@@ -114,7 +112,7 @@ textarea {
     resize: none;
     word-break: normal;
 
-    font-family: Arial;
+    font-family: Arial, serif;
 }
 
 select,

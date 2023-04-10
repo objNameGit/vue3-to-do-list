@@ -12,7 +12,7 @@ export interface Item {
 }
 
 export enum ItemStatus {
-    Complited = 'Complited',
+    Complete = 'Complete',
     Active = 'Active',
 }
 
@@ -35,9 +35,13 @@ for (let i = 1; i <= taskCounter; i++) {
     const newItem = {
         id: i,
         parentId: 0,
-        title: i === 1 ? 'Task_1Task_1Task_k_1Task_1T asask_1Task_1Task_1Task_1' : `Task_${i}`,
+        title:
+            i === 1
+                ? 'Task_1Task_1Task_k_1Task_1T asask_1Task_1Task_1Task_1'
+                : `Task_${i}`,
         data: new Date(),
-        description: i === 1 ? `do something ${i}`.repeat(20) : `do something ${i}`,
+        description:
+            i === 1 ? `do something ${i}`.repeat(20) : `do something ${i}`,
         status: ItemStatus.Active,
     };
 

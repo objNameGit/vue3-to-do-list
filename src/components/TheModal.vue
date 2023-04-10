@@ -49,6 +49,20 @@ onUnmounted(() => (document.body.style.overflow = ''));
 </script>
 
 <style lang="css" scoped>
+form {
+    margin: auto;
+    max-width: 500px;
+    min-width: 390px;
+    max-height: 500px;
+    border-radius: 8px;
+    background-color: var(--color-background);
+    box-shadow: 2px 2px 10px 2px var(--color-shadow);
+}
+
+textarea {
+    background-color: red;
+}
+
 .modal-background-container {
     --modal-horizontal-margin: 20px;
 
@@ -65,16 +79,6 @@ onUnmounted(() => (document.body.style.overflow = ''));
     z-index: 10;
 }
 
-form {
-    margin: auto;
-    max-width: 500px;
-    min-width: 390px;
-    max-height: 500px;
-    border-radius: 8px;
-    background-color: white;
-    box-shadow: 5px 6px 14px 0px #606060;
-}
-
 .title,
 .action-wrapper {
     margin: var(--modal-horizontal-margin);
@@ -85,10 +89,7 @@ form {
 }
 
 .body-wrapper {
-    margin-top: 0;
-    margin-right: var(--modal-horizontal-margin);
-    margin-bottom: var(--modal-horizontal-margin);
-    margin-left: var(--modal-horizontal-margin);
+    margin: 0 var(--modal-horizontal-margin) var(--modal-horizontal-margin);
 }
 
 .action-wrapper {
@@ -97,16 +98,16 @@ form {
 }
 
 .cancel-button:hover {
-    background-color: var(--vt-c-white-soft);
+    background-color: var(--color-secondary-modal-button-hover);
 }
 
 .accept-button:hover {
-    background-color: #0945d3;
+    background-color: var(--color-primary-modal-button-hover);
 }
 
-.action-button:action {
+.action-button:active:not(.accept-button[disabled]) {
     margin-right: 1px;
-    background-color: #1552e0;
+    background-color: var(--color-primary-modal-button-active);
     transform: translateY(-1px);
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 }
@@ -123,18 +124,18 @@ form {
 }
 
 .accept-button {
-    background-color: #0953ff;
+    background-color: var(--color-primary-modal-button);
     color: white;
 }
 
 .accept-button[disabled] {
-    background-color: #dfdfdf;
+    background-color: var(--color-primary-modal-button-disabled);
     color: white;
 }
 
 .cancel-button {
-    background-color: white;
-    border: 1px solid #c7c7c7;
-    cursor: poinnter;
+    background-color: var(--color-secondary-modal-button);
+    border: 1px solid var(--color-secondary-modal-button-border);
+    cursor: pointer;
 }
 </style>

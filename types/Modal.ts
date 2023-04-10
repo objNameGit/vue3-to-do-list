@@ -17,8 +17,8 @@ export interface ModalState {
     title: string;
     message: string;
     params: ModalActionParams;
-    onAcceptClick: (params?: any) => void;
-    onCancelClick: (params?: any) => void;
+    onAcceptClick: <T>(params?: T) => void;
+    onCancelClick: <T>(params?: T) => void;
 }
 
 export const titleActionDict: Record<ModalAction, string> = {
@@ -36,6 +36,6 @@ export const defaultModalState: ModalState = {
     params: {
         actionItem: { ...defaultItem },
     },
-    onAcceptClick: (...params: any) => {},
-    onCancelClick: (params: any) => {},
+    onAcceptClick: (...params) => {},
+    onCancelClick: (params) => {},
 };

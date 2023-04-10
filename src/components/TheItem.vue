@@ -1,5 +1,10 @@
 <template>
-    <div :id="`${item.id}`" draggable="true" class="item" @click="isOpen = !isOpen">
+    <div
+        :id="`${item.id}`"
+        draggable="true"
+        class="item"
+        @click="isOpen = !isOpen"
+    >
         <div class="input-wrapper">
             <input
                 class="item-checkbox"
@@ -40,7 +45,7 @@
                 <img
                     :src="`${getStatusIcon}`"
                     class="img-status action-icon"
-                    alt="Status icon"
+                    alt="status icon"
                     @click.stop="changeStatus()"
                 />
             </button>
@@ -79,19 +84,19 @@ export interface TheItemProps {
     selectedItemDict: SelectedItemDict;
     whenEditItemClick: (item: Item) => void;
     whenCreateItemClick: () => void;
-    whenChangeItemStatus: (...params: any) => void;
-    whenDeleteItemListClick: (...params: any) => void;
-    toggleSelectedItem: (...params: any) => void;
+    whenChangeItemStatus: <T extends Array<unknown>>(...params: T) => void;
+    whenDeleteItemListClick: <T extends Array<unknown>>(...params: T) => void;
+    toggleSelectedItem: <T extends Array<unknown>>(...params: T) => void;
 }
 
 const props = defineProps<TheItemProps>();
 const isOpen = ref(false);
 
-const getStatusIcon = computed<string>((): string => {
-    let result = '';
+const getStatusIcon = computed((): string => {
+    let result;
 
     switch (props.item.status) {
-        case ItemStatus.Complited:
+        case ItemStatus.Complete:
             result = doneStatusImg;
             break;
 
@@ -107,21 +112,29 @@ const getStatusIcon = computed<string>((): string => {
     return result;
 });
 
-const isSelectedItem = computed<boolean>((): boolean => {
+const isSelectedItem = computed((): boolean => {
     return !!props.selectedItemDict[props.item.id] || false;
 });
-const childCount = computed<number>((): number => {
+
+const childCount = computed((): number => {
     return props.childListDict[props.item.id]?.length ?? 0;
 });
 
-const isParent = computed<boolean>((par): boolean => {
+const isParent = computed(() => {
     return props.item.parentId === 0;
 });
 
 function changeStatus() {
-    const newStatus = props.item.status === ItemStatus.Complited ? ItemStatus.Active : ItemStatus.Complited;
+    const newStatus =
+        props.item.status === ItemStatus.Complete
+            ? ItemStatus.Active
+            : ItemStatus.Complete;
 
-    props.whenChangeItemStatus(newStatus, props.item.id, props.item.parentId);
+    props.whenChangeItemStatus<[ItemStatus, Item['id'], Item['parentId']]>(
+        newStatus,
+        props.item.id,
+        props.item.parentId
+    );
 }
 
 function onToggle(event) {
@@ -152,8 +165,8 @@ function onToggle(event) {
 }
 
 .input-wrapper {
-    margin: auto 0;
-    margin: auto calc(var(--horizotal-padding-item) / 2) auto var(--horizotal-padding-item);
+    margin: auto calc(var(--horizotal-padding-item) / 2) auto
+        var(--horizotal-padding-item);
 }
 
 .item-checkbox {
@@ -198,7 +211,7 @@ function onToggle(event) {
 }
 
 button.custom-button {
-    padding: 0px;
+    padding: 0;
     background: none;
     border: none;
 
@@ -207,14 +220,6 @@ button.custom-button {
 
 .action-icon {
     width: 20px;
-}
-
-.item-img {
-    width: 30px;
-    height: 30px;
-
-    margin: auto 0;
-    padding: 0 10px;
 }
 
 h3 {
@@ -238,11 +243,6 @@ h3 {
     border-radius: 50%;
     background-color: #c2f2f7;
     color: #686868;
-}
-
-
-.rotate-90 {
-    transform: rotate(90deg);
 }
 
 @media (min-width: 1024px) {

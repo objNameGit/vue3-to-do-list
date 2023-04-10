@@ -1,10 +1,7 @@
 <template>
     <div class="item-list-container">
         <div class="item-list-action" v-if="isRoot">
-            <button
-                class="custom-button" 
-                @click="whenCreateItemClick"
-            >
+            <button class="custom-button" @click="whenCreateItemClick">
                 Создать задачу
             </button>
             <button
@@ -34,10 +31,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { computed } from 'vue';
 import TheItem from '@/components/TheItem.vue';
 
-import type { ItemList, ItemStatus, Item, SubItemDict, SelectedItemDict } from '~/types/Item';
+import type {
+    ItemList,
+    ItemStatus,
+    Item,
+    SubItemDict,
+    SelectedItemDict,
+} from '~/types/Item';
 
 export interface TheItemProps {
     isRoot?: boolean;
@@ -46,20 +49,28 @@ export interface TheItemProps {
     selectedItemDict: SelectedItemDict;
     whenCreateItemClick: () => void;
     whenEditItemClick: (item: Item) => void;
-    whenChangeItemStatus: (newStatus: ItemStatus, id: number, parentId?: number) => void;
+    whenChangeItemStatus: (
+        newStatus: ItemStatus,
+        id: number,
+        parentId?: number
+    ) => void;
     whenDeleteItemListClick: (params?: any) => void;
     toggleSelectedItem: (value: boolean, item: Item) => void;
 }
 
 const props = defineProps<TheItemProps>();
 
-const havingSelectedItem = computed(() => Object.keys(props.selectedItemDict).length > 0);
+const havingSelectedItem = computed(
+    () => Object.keys(props.selectedItemDict).length > 0
+);
 
 function onDeleteClick() {
     const keyList = Object.keys(props.selectedItemDict);
     const params = [] as ItemList;
 
-    keyList.forEach((key: string) => params.push(props.selectedItemDict[Number(key)]));
+    keyList.forEach((key: string) =>
+        params.push(props.selectedItemDict[Number(key)])
+    );
 
     props.whenDeleteItemListClick(params);
 }
@@ -83,11 +94,6 @@ function onDeleteClick() {
     gap: 12px;
 }
 
-.item {
-    margin-top: 2rem;
-    display: flex;
-}
-
 h3 {
     font-size: 1.2rem;
     font-weight: 500;
@@ -96,7 +102,7 @@ h3 {
 }
 
 button.custom-button {
-    padding: 0px;
+    padding: 0;
     background: none;
     border: none;
 

@@ -2,7 +2,7 @@ import { ref } from 'vue';
 import { defineStore } from 'pinia';
 import { useTaskStore } from '@/stores/itemStore';
 
-import { defaultModalState, ModalAction, titleActionDict } from '~/types/modal';
+import { defaultModalState, ModalAction, titleActionDict } from '~/types/Modal';
 import type { Item, ItemList } from '~/types/Item';
 import { defaultItem } from '~/types/Item';
 
@@ -44,7 +44,7 @@ export const useModalStore = defineStore('modal', () => {
         modal.value.params.actionItem = { ...item };
         modal.value.isVisible = true;
 
-        modal.value.onAcceptClick = (editedItem: Item) => {
+        modal.value.onAcceptClick = <Item>(editedItem) => {
             itemStore.patchItem(editedItem, item);
 
             resetState();
@@ -62,7 +62,7 @@ export const useModalStore = defineStore('modal', () => {
         modal.value.params.actionItem = { ...defaultItem };
         modal.value.isVisible = true;
 
-        modal.value.onAcceptClick = (item: Item) => {
+        modal.value.onAcceptClick = <Item>(item) => {
             itemStore.createItem(item);
 
             resetState();
